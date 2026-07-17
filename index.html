@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원정대 모집소 — 메이플스토리 보스 구인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  :root{
+    --bg:#0a0a0d;
+    --bg-elevated:#111116;
+    --card:#16161c;
+    --card-hover:#1c1c24;
+    --border:#26262f;
+    --border-soft:#1d1d24;
+    --text-primary:#f1efe9;
+    --text-muted:#8d8b96;
+    --text-faint:#5c5a66;
+    --ember:#ff5a36;
+    --ember-2:#ffb648;
+    --tier-below:#4fc3f7;
+    --tier-above:#ff3b5c;
+    --radius:14px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{
+    background:var(--bg);
+    color:var(--text-primary);
+    font-family:'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  body{
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(255,90,54,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 90% 0%, rgba(180,124,255,0.08), transparent 60%);
+    min-height:100vh;
+  }
+
+  .app{ max-width:1180px; margin:0 auto; padding:0 28px 80px; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:64px 0 40px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    border-bottom:1px solid var(--border-soft);
+    margin-bottom:36px;
+  }
+  .hero-eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px; letter-spacing:0.14em;
+    color:var(--ember-2); text-transform:uppercase;
+  }
+  .hero-eyebrow::before{
+    content:''; width:22px; height:1px; background:var(--ember);
+  }
+  .hero h1{
+    font-family:'Black Han Sans', sans-serif;
+    font-weight:400;
+    font-size:clamp(34px, 5.4vw, 58px);
+    letter-spacing:-0.01em;
+    line-height:1.08;
+    background:linear-gradient(180deg, #fff 0%, #cfcdd6 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero h1 em{
+    font-style:normal;
+    background:linear-gradient(90deg, var(--ember) 0%, var(--ember-2) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p{
+    color:var(--text-muted);
+    font-size:15.5px; line-height:1.65;
+    max-width:560px;
+  }
+  .hero-stats{
+    display:flex; gap:28px; margin-top:8px; flex-wrap:wrap;
+  }
+  .hero-stat{ display:flex; flex-direction:column; gap:2px; }
+  .hero-stat b{
+    font-family:'JetBrains Mono', monospace;
+    font-size:20px; color:var(--text-primary);
+  }
+  .hero-stat span{ font-size:12px; color:var(--text-faint); }
+
+  /* ---------- FILTER ---------- */
+  .filter-row{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin-bottom:28px;
+  }
+  .filter-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px; color:var(--text-faint);
+    letter-spacing:0.08em; text-transform:uppercase;
+    margin-right:4px;
+  }
+  .chip{
+    appearance:none; border:1px solid var(--border);
+    background:var(--bg-elevated); color:var(--text-muted);
+    font-family:'Pretendard'; font-size:13.5px; font-weight:600;
+    padding:8px 16px; border-radius:999px; cursor:pointer;
+    transition:all .18s ease;
+    display:flex; align-items:center; gap:7px;
+  }
+  .chip .dot{ width:7px; height:7px; border-radius:50%; background:var(--text-faint); }
+  .chip:hover{ border-color:var(--border); color:var(--text-primary); background:var(--card-hover); }
+  .chip.active{ color:var(--bg); background:var(--text-primary); border-color:var(--text-primary); }
+  .chip.active .dot{ background:var(--bg); }
+
+  /* ---------- GRID ---------- */
+  .boss-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(168px, 1fr));
+    gap:16px;
+  }
+
+  .boss-card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    padding:20px 16px 16px;
+    cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    text-align:center;
+    transform-style:preserve-3d;
+    transition:transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
+    overflow:hidden;
+    animation:cardIn .5s ease backwards;
+  }
+  @keyframes cardIn{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:translateY(0);} }
+
+  .boss-card::before{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(120px 120px at var(--mx,50%) var(--my,0%), rgba(255,255,255,0.06), transparent 70%);
+    opacity:0; transition:opacity .25s ease; pointer-events:none;
+  }
+  .boss-card:hover::before{ opacity:1; }
+  .boss-card:hover{
+    border-color:var(--tier-color, var(--ember));
+    background:var(--card-hover);
+    box-shadow:0 10px 30px -12px rgba(0,0,0,0.6), 0 0 0 1px var(--tier-color, var(--ember)) inset;
+  }
+  .boss-card:active{ transform:scale(0.97) !important; }
+  .boss-card:focus-visible{ outline:2px solid var(--ember-2); outline-offset:3px; }
+
+  .crest{
+    width:76px; height:76px;
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+    clip-path:polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+    background:linear-gradient(160deg, var(--tier-color) 0%, rgba(0,0,0,0.35) 100%);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.12);
+    transition:transform .25s ease;
+  }
+  .boss-card:hover .crest{ transform:scale(1.06) rotate(2deg); }
+  .crest::after{
+    content:''; position:absolute; inset:2px;
+    clip-path:polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+    background:linear-gradient(160deg, rgba(255,255,255,0.10), transparent 60%);
+  }
+  .crest-glyph{
+    font-family:'Black Han Sans', sans-serif;
+    font-size:26px; color:#fff;
+    text-shadow:0 2px 8px rgba(0,0,0,0.5);
+    z-index:1;
+  }
+
+  .boss-name{
+    font-size:15px; font-weight:700; letter-spacing:-0.01em;
+    color:var(--text-primary);
+  }
+  .boss-tier{
+    font-family:'Pretendard', sans-serif;
+    font-size:11.5px; font-weight:700; letter-spacing:-0.01em;
+    color:var(--tier-color);
+    background:color-mix(in srgb, var(--tier-color) 14%, transparent);
+    padding:4px 11px; border-radius:999px;
+    border:1px solid color-mix(in srgb, var(--tier-color) 40%, transparent);
+  }
+
+  .boss-meta{
+    font-size:11.5px; color:var(--text-faint);
+    display:flex; align-items:center; gap:5px;
+  }
+  .boss-meta .pulse{
+    width:6px; height:6px; border-radius:50%; background:#5ee38a;
+    box-shadow:0 0 0 0 rgba(94,227,138,0.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(94,227,138,0.5); }
+    70%{ box-shadow:0 0 0 6px rgba(94,227,138,0); }
+    100%{ box-shadow:0 0 0 0 rgba(94,227,138,0); }
+  }
+
+  /* ---------- BOARD SCREEN ---------- */
+  .board-screen{ display:none; }
+  .board-screen.active{ display:block; animation:screenIn .35s ease; }
+  @keyframes screenIn{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:translateY(0);} }
+  #home-screen.leaving{ display:none; }
+
+  .back-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background:none; border:1px solid var(--border);
+    color:var(--text-muted); font-family:'Pretendard'; font-size:13px; font-weight:600;
+    padding:9px 16px 9px 12px; border-radius:999px; cursor:pointer;
+    margin:32px 0 24px; transition:all .18s ease;
+  }
+  .back-btn:hover{ color:var(--text-primary); border-color:var(--text-primary); background:var(--bg-elevated); }
+
+  .board-hero{
+    display:flex; align-items:center; gap:22px;
+    padding:26px; border-radius:18px;
+    background:linear-gradient(135deg, var(--card) 0%, var(--bg-elevated) 100%);
+    border:1px solid var(--border-soft);
+    margin-bottom:28px;
+    position:relative; overflow:hidden;
+  }
+  .board-hero::after{
+    content:''; position:absolute; right:-40px; top:-40px; width:220px; height:220px;
+    background:radial-gradient(circle, var(--tier-color) 0%, transparent 70%);
+    opacity:0.18; pointer-events:none;
+  }
+  .board-hero .crest{ width:88px; height:88px; flex:none; }
+  .board-hero .crest-glyph{ font-size:30px; }
+  .board-badges{ display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+  .board-title h2{
+    font-family:'Black Han Sans', sans-serif; font-weight:400;
+    font-size:30px; margin-bottom:6px;
+  }
+  .board-title p{ color:var(--text-muted); font-size:13.5px; margin-top:8px; max-width:520px; }
+
+  .board-toolbar{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:16px; flex-wrap:wrap; gap:12px;
+  }
+  .board-toolbar h3{ font-size:14.5px; color:var(--text-muted); font-weight:700; }
+
+  .status-banner{
+    display:flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:600;
+    padding:9px 14px; border-radius:10px;
+    margin-bottom:18px;
+  }
+  .status-banner.status-live{
+    color:#5ee38a; background:rgba(94,227,138,0.1); border:1px solid rgba(94,227,138,0.3);
+  }
+  .status-banner.status-demo{
+    color:var(--ember-2); background:rgba(255,182,72,0.1); border:1px solid rgba(255,182,72,0.3);
+  }
+
+  .board-empty{
+    text-align:center; color:var(--text-faint); font-size:13.5px; line-height:1.7;
+    padding:48px 20px; background:var(--card); border:1px dashed var(--border-soft); border-radius:14px;
+  }
+  .write-btn{
+    background:linear-gradient(90deg, var(--ember), var(--ember-2));
+    color:#0a0a0d; border:none; font-weight:800; font-size:13.5px;
+    padding:10px 18px; border-radius:10px; cursor:pointer;
+    transition:filter .18s ease, transform .18s ease;
+  }
+  .write-btn:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+
+  .party-list{ display:flex; flex-direction:column; gap:12px; }
+  .party-card{
+    background:var(--card); border:1px solid var(--border-soft);
+    border-radius:14px; padding:18px 20px;
+    display:flex; flex-direction:column; gap:14px;
+    transition:border-color .18s ease, background .18s ease;
+  }
+  .party-card:hover{ border-color:var(--border); background:var(--card-hover); }
+
+  .party-card-top{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;
+  }
+  .party-card-title b{ font-size:14.5px; }
+  .party-time{ display:block; font-size:11.5px; color:var(--text-faint); margin-top:4px; }
+  .party-badges{ display:flex; gap:8px; flex:none; }
+  .party-diff{
+    font-size:11px; font-family:'JetBrains Mono', monospace;
+    color:var(--tier-color); border:1px solid color-mix(in srgb, var(--tier-color) 45%, transparent);
+    background:color-mix(in srgb, var(--tier-color) 14%, transparent);
+    padding:4px 9px; border-radius:8px; white-space:nowrap; font-weight:600;
+  }
+  .party-period{
+    font-size:11px; font-family:'JetBrains Mono', monospace;
+    color:var(--text-muted); border:1px solid var(--border); padding:4px 9px; border-radius:8px;
+    white-space:nowrap;
+  }
+
+  .party-tags{ display:flex; gap:8px; flex-wrap:wrap; }
+  .party-chip{
+    font-size:12px; color:var(--text-muted);
+    background:var(--card); border:1px solid var(--border);
+    padding:5px 11px; border-radius:999px; white-space:nowrap;
+  }
+
+  .party-specs{
+    display:flex; flex-direction:column; gap:9px;
+    padding:14px 16px; background:var(--bg-elevated);
+    border-radius:10px; border:1px solid var(--border-soft);
+  }
+  .spec-line{ display:flex; align-items:baseline; gap:12px; }
+  .spec-label{
+    flex:none; width:66px;
+    font-size:12.5px; color:var(--text-faint); font-weight:600;
+  }
+  .spec-value{
+    font-size:14px; color:var(--text-primary); font-weight:600;
+    line-height:1.5;
+  }
+  .spec-value b{ color:var(--tier-color); font-weight:800; }
+  .spec-divider{
+    border:none; border-top:1px solid var(--border-soft); margin:0;
+  }
+
+  .party-note{
+    font-size:12.5px; color:var(--text-muted); line-height:1.55;
+    background:var(--bg-elevated); border:1px solid var(--border-soft);
+    border-radius:10px; padding:10px 13px; white-space:pre-wrap; word-break:break-word;
+  }
+  .party-note b{ color:var(--text-primary); font-weight:700; }
+
+  /* ---------- APPLICATIONS (댓글형 신청 내역) ---------- */
+  .party-apps-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:12px; margin-top:2px;
+    border-top:1px dashed var(--border-soft);
+    cursor:pointer; user-select:none;
+  }
+  .apps-count{ font-size:12.5px; color:var(--text-muted); font-weight:600; }
+  .apps-count b{ color:var(--tier-color); font-weight:800; }
+  .apps-arrow{ font-size:11.5px; color:var(--text-faint); transition:transform .18s ease; }
+  .party-card.apps-open .apps-arrow{ transform:rotate(180deg); }
+
+  .party-apps-panel{
+    display:none; flex-direction:column; gap:8px;
+    margin-top:4px; padding-top:2px;
+  }
+  .party-card.apps-open .party-apps-panel{ display:flex; }
+
+  .app-empty{
+    font-size:12.5px; color:var(--text-faint);
+    padding:12px; text-align:center;
+    background:var(--bg-elevated); border-radius:9px; border:1px dashed var(--border-soft);
+  }
+  .app-comment{
+    background:var(--bg-elevated); border:1px solid var(--border-soft);
+    border-radius:9px; padding:11px 13px;
+    border-left:2px solid var(--tier-color);
+  }
+  .app-comment-top{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:4px; }
+  .app-comment-top b{ font-size:13px; color:var(--text-primary); }
+  .app-comment-job{ font-size:11.5px; color:var(--text-muted); }
+  .app-comment-time{ font-size:11px; color:var(--text-faint); margin-left:auto; }
+  .app-comment-spec{ font-size:12px; color:var(--text-muted); }
+  .app-comment-schedule{ font-size:12px; color:var(--text-muted); margin-top:4px; }
+  .app-comment-message{
+    margin-top:6px; font-size:12px; color:var(--text-muted);
+    line-height:1.5; white-space:pre-wrap; word-break:break-word;
+    border-top:1px solid var(--border-soft); padding-top:6px;
+  }
+
+  .party-card-footer{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  .party-discord{
+    font-size:12.5px; color:var(--text-muted);
+    font-family:'JetBrains Mono', monospace;
+    display:flex; align-items:center; gap:6px;
+  }
+  .join-btn{
+    background:none; border:1px solid var(--tier-color);
+    color:var(--tier-color); font-weight:700; font-size:12.5px;
+    padding:8px 14px; border-radius:8px; cursor:pointer;
+    transition:all .18s ease; white-space:nowrap;
+  }
+  .join-btn:hover{ background:var(--tier-color); color:#0a0a0d; }
+
+  .party-card-actions{ display:flex; gap:8px; align-items:center; }
+  .match-btn{
+    background:none; border:1px solid var(--border);
+    color:var(--text-muted); font-weight:700; font-size:12.5px;
+    padding:8px 14px; border-radius:8px; cursor:pointer;
+    transition:all .18s ease; white-space:nowrap;
+  }
+  .match-btn:hover{ border-color:#5ee38a; color:#5ee38a; }
+  .match-btn:disabled{ opacity:0.5; cursor:default; }
+  .party-card.matched .match-btn{ border-color:#5ee38a; color:#5ee38a; background:rgba(94,227,138,0.12); }
+  .party-card.matched .join-btn{ opacity:0.4; pointer-events:none; }
+  .matched-badge{
+    display:none; font-size:11px; font-weight:700; color:#5ee38a;
+    background:rgba(94,227,138,0.14); border:1px solid rgba(94,227,138,0.4);
+    padding:4px 9px; border-radius:8px; white-space:nowrap;
+  }
+  .party-card.matched .matched-badge{ display:inline-flex; align-items:center; gap:4px; }
+
+  .maple-link{
+    color:inherit; text-decoration:underline;
+    text-decoration-color:color-mix(in srgb, var(--tier-color) 55%, transparent);
+    text-underline-offset:2px;
+    transition:color .15s ease;
+  }
+  .maple-link:hover{ color:var(--tier-color); }
+
+  .webhook-badge{
+    font-size:10.5px; color:var(--text-faint);
+    display:inline-flex; align-items:center; gap:4px;
+  }
+
+  /* ---------- TOAST ---------- */
+  #toast-container{
+    position:fixed; bottom:22px; right:22px; z-index:300;
+    display:flex; flex-direction:column; gap:10px;
+    max-width:min(340px, calc(100vw - 44px));
+  }
+  .toast{
+    background:var(--bg-elevated); border:1px solid var(--border);
+    color:var(--text-primary); font-size:13px; line-height:1.5;
+    padding:12px 16px; border-radius:11px;
+    box-shadow:0 14px 30px -12px rgba(0,0,0,0.6);
+    animation:toastIn .25s ease;
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  .toast.toast-error{ border-color:rgba(255,59,92,0.5); }
+  .toast.toast-success{ border-color:rgba(94,227,138,0.5); }
+  .toast-icon{ flex:none; font-size:15px; line-height:1.3; }
+  @keyframes toastIn{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:translateY(0);} }
+  .toast.toast-leaving{ animation:toastOut .2s ease forwards; }
+  @keyframes toastOut{ to{ opacity:0; transform:translateY(6px); } }
+
+  @media (max-width:560px){
+    .spec-line{ flex-direction:column; gap:2px; }
+    .spec-label{ width:auto; }
+    .board-hero{ flex-direction:column; text-align:center; }
+  }
+
+  /* ---------- DIFFICULTY SCREEN ---------- */
+  .diff-options{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+    gap:14px;
+  }
+  .diff-option{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    cursor:pointer;
+    text-align:left;
+    display:flex; flex-direction:column; gap:10px;
+    transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+  }
+  .diff-option:hover{
+    border-color:var(--diff-color, var(--ember));
+    background:var(--card-hover);
+    transform:translateY(-2px);
+    box-shadow:0 10px 26px -14px rgba(0,0,0,0.6), 0 0 0 1px var(--diff-color, var(--ember)) inset;
+  }
+  .diff-option:active{ transform:translateY(0) scale(0.98); }
+  .diff-option-badge{
+    width:34px; height:34px; border-radius:9px;
+    background:color-mix(in srgb, var(--diff-color) 18%, transparent);
+    border:1px solid color-mix(in srgb, var(--diff-color) 45%, transparent);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace; font-weight:700; font-size:13px;
+    color:var(--diff-color);
+  }
+  .diff-option-name{ font-size:16px; font-weight:800; color:var(--text-primary); }
+  .diff-option-sub{ font-size:12px; color:var(--text-faint); }
+
+  /* ---------- WRITE MODAL ---------- */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(6,6,8,0.72);
+    backdrop-filter:blur(4px);
+    align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .modal-overlay.active{ display:flex; animation:overlayIn .2s ease; }
+  @keyframes overlayIn{ from{ opacity:0; } to{ opacity:1; } }
+
+  .modal{
+    width:min(560px, 100%);
+    max-height:88vh; overflow-y:auto;
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:26px 26px 22px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.7);
+    animation:modalIn .25s ease;
+  }
+  @keyframes modalIn{ from{ opacity:0; transform:translateY(10px) scale(0.98);} to{ opacity:1; transform:translateY(0) scale(1);} }
+
+  .modal-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
+  .modal-header h3{
+    font-family:'Black Han Sans', sans-serif; font-weight:400; font-size:22px;
+  }
+  .modal-close{
+    background:none; border:none; color:var(--text-muted); font-size:18px;
+    cursor:pointer; line-height:1; padding:4px; transition:color .15s ease;
+  }
+  .modal-close:hover{ color:var(--text-primary); }
+  .modal-sub{ color:var(--text-faint); font-size:12.5px; margin-bottom:20px; }
+
+  .form-section-label{
+    font-family:'JetBrains Mono', monospace; font-size:11px;
+    color:var(--ember-2); text-transform:uppercase; letter-spacing:0.08em;
+    margin:6px 0 -2px;
+  }
+  .form-row{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0;
+  }
+  .form-row.form-row-full{ grid-template-columns:1fr; }
+  .write-form label{
+    display:flex; flex-direction:column; gap:6px;
+    font-size:12.5px; color:var(--text-muted); font-weight:600;
+  }
+  .write-form label em{ color:var(--ember); font-style:normal; }
+  .field-optional{ color:var(--text-faint); font-weight:500; font-size:11.5px; }
+  .write-form input, .write-form select{
+    background:var(--card); border:1px solid var(--border);
+    border-radius:9px; padding:10px 12px; color:var(--text-primary);
+    font-family:'Pretendard'; font-size:14px; outline:none;
+    color-scheme:dark;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .write-form textarea{
+    background:var(--card); border:1px solid var(--border);
+    border-radius:9px; padding:10px 12px; color:var(--text-primary);
+    font-family:'Pretendard'; font-size:14px; outline:none; resize:vertical;
+    min-height:76px; line-height:1.5;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .write-form textarea::placeholder{ color:var(--text-faint); }
+  .write-form textarea:focus{
+    border-color:var(--ember-2);
+    box-shadow:0 0 0 3px rgba(255,182,72,0.15);
+  }
+  .write-form input::placeholder{ color:var(--text-faint); }
+  .write-form input:focus, .write-form select:focus{
+    border-color:var(--ember-2);
+    box-shadow:0 0 0 3px rgba(255,182,72,0.15);
+  }
+  .write-form input:invalid:not(:placeholder-shown), .write-form select:invalid{
+    border-color:var(--tier-above);
+  }
+  .form-actions{
+    display:flex; justify-content:flex-end; gap:10px; margin-top:20px;
+  }
+  .btn-secondary{
+    background:none; border:1px solid var(--border); color:var(--text-muted);
+    padding:10px 18px; border-radius:9px; cursor:pointer;
+    font-weight:600; font-size:13.5px; transition:all .18s ease;
+  }
+  .btn-secondary:hover{ border-color:var(--text-primary); color:var(--text-primary); }
+  .btn-primary{
+    background:linear-gradient(90deg, var(--ember), var(--ember-2));
+    color:#0a0a0d; border:none; font-weight:800; font-size:13.5px;
+    padding:10px 20px; border-radius:9px; cursor:pointer;
+    transition:filter .18s ease, transform .18s ease;
+  }
+  .btn-primary:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+
+  @media (max-width:520px){
+    .form-row{ grid-template-columns:1fr; }
+  }
+</style>
+<style>
+  /* ---------- GOOGLE AUTH LAYOUT ---------- */
+  .auth-top-right {
+      position: absolute;  
+      top: 40px;          
+      right: 50px;         
+      z-index: 999;        
+      font-family: sans-serif;
+      color: #ffffff;      
+  }
+  .btn-google-login {
+      background-color: #ff6600; 
+      color: #ffffff;            
+      border: none;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      transition: all 0.2s ease; 
+  }
+  .btn-google-login:hover {
+      background-color: #e65c00;          
+      transform: translateY(-3px);       
+      box-shadow: 0 5px 10px rgba(0,0,0,0.4); 
+  }
+  .btn-logout {
+      background-color: #333333;
+      color: #aaaaaa;
+      border: 1px solid #444444;
+      padding: 4px 8px;
+      font-size: 11px;
+      border-radius: 4px;
+      margin-left: 10px;
+      cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="app" style="position: relative;">
+  
+  <!-- 로그인 섹션 (우측 상단 자동 조준) -->
+  <div id="login-section" class="auth-top-right">
+      <button id="login-btn" class="btn-google-login">로그인</button>
+      <div id="user-info" style="display: none;">
+          <span id="user-name"></span>님
+          <button id="logout-btn" class="btn-logout">로그아웃</button>
+      </div>
+  </div>
+
+  <!-- ================= HOME SCREEN ================= -->
+  <div id="home-screen">
+    <header class="hero">
+      <div class="hero-eyebrow">MAPLESTORY · BOSS PARTY BOARD</div>
+      <h1>오늘의 원정대,<br><em>보스</em>를 골라 시작하세요</h1>
+      <p>보스를 클릭하면 해당 보스의 구인 게시판으로 이동합니다. 난이도 태그를 참고해서 내 스펙에 맞는 파티를 찾아보세요.</p>
+     <div class="hero-stats">
+  <div class="hero-stat"><b id="stat-total">17</b><span>등록된 보스</span></div>
+</div>
+    </header>
+
+    <div class="filter-row">
+      <button class="chip active" data-filter="all"><span class="dot"></span>전체</button>
+      <button class="chip" data-filter="below"><span class="dot" style="background:var(--tier-below)"></span>검밑솔</button>
+      <button class="chip" data-filter="above"><span class="dot" style="background:var(--tier-above)"></span>검윗솔</button>
+    </div>
+
+    <div class="boss-grid" id="boss-grid"></div>
+  </div>
+
+  <!-- ================= DIFFICULTY SCREEN ================= -->
+  <div id="diff-screen" class="board-screen">
+    <button class="back-btn" id="diff-back-btn">← 보스 목록으로</button>
+    <div class="board-hero" id="diff-hero-content"></div>
+    <div class="diff-options" id="diff-options"></div>
+  </div>
+
+  <!-- ================= BOARD SCREEN ================= -->
+  <div id="board-screen" class="board-screen">
+    <button class="back-btn" id="back-btn">← 난이도 선택으로</button>
+    <div class="board-hero" id="board-hero-content"></div>
+    <div id="firebase-status-banner" class="status-banner"></div>
+    <div class="board-toolbar">
+      <h3 id="board-count">구인 글 0개</h3>
+      <button class="write-btn" id="write-btn">+ 구인 글 작성</button>
+    </div>
+    <div class="party-list" id="party-list"></div>
+  </div>
+
+  <!-- ================= WRITE MODAL ================= -->
+  <div id="write-modal-overlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>구인 글 작성</h3>
+        <button type="button" class="modal-close" id="modal-close-btn">✕</button>
+      </div>
+      <p class="modal-sub" id="modal-target-boss">보스 · 난이도</p>
+
+      <form id="write-form" class="write-form" novalidate>
+        <div class="form-row">
+          <label>닉네임 <em>*</em>
+            <input type="text" name="nickname" required placeholder="예: 달빛조각사">
+          </label>
+          <label>직업 <em>*</em>
+            <input type="text" name="job" required placeholder="예: 아크메이지(불,독)">
+          </label>
+        </div>
+
+        <div class="form-section-label">본인 스펙</div>
+        <div class="form-row">
+          <label>레벨 <em>*</em>
+            <input type="number" name="myLevel" min="1" max="300" required placeholder="275">
+          </label>
+          <label>보스 배율 (%) <em>*</em>
+            <input type="number" name="myMultiplier" min="0" step="0.1" required placeholder="450">
+          </label>
+        </div>
+
+        <div class="form-section-label">모집 조건 (구직자)</div>
+        <div class="form-row">
+          <label>레벨 <em>*</em>
+            <input type="number" name="condLevel" min="1" max="300" required placeholder="260">
+          </label>
+          <label>보스 배율 (%) <em>*</em>
+            <input type="number" name="condMultiplier" min="0" step="0.1" required placeholder="350">
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>모집 인원 <em>*</em>
+            <input type="number" name="headcount" min="1" max="6" required placeholder="6">
+          </label>
+          <label>기간 <em>*</em>
+            <select name="period" required>
+              <option value="" disabled selected>선택해주세요</option>
+              <option value="고정">고정</option>
+              <option value="용병">용병</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-row form-row-full">
+          <label>디스코드 주소 <em>*</em>
+            <input type="text" name="discord" required placeholder="예: discord.gg/abc1234">
+          </label>
+        </div>
+
+        <div class="form-row form-row-full">
+          <label>디스코드 웹훅 URL <span class="field-optional">(선택 · 새 신청자 / 매칭 완료 알림 수신)</span>
+            <input type="url" name="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
+          </label>
+        </div>
+
+        <div class="form-row form-row-full">
+          <label>하고 싶은 말
+            <textarea name="message" rows="3" placeholder="예: 스카니아 서버입니다 / 쿨뚝(쿨타임 감소) 유무 / 디스코드 필수로 켜주세요 등 자유롭게 적어주세요"></textarea>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="modal-cancel-btn">취소</button>
+          <button type="submit" class="btn-primary">구인 글 등록</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= APPLY MODAL (참가 신청) ================= -->
+  <div id="apply-modal-overlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>참가 신청</h3>
+        <button type="button" class="modal-close" id="apply-modal-close-btn">✕</button>
+      </div>
+      <p class="modal-sub" id="apply-modal-target">구인 글 · 파티장 닉네임</p>
+
+      <form id="apply-form" class="write-form" novalidate>
+        <div class="form-row">
+          <label>닉네임 <em>*</em>
+            <input type="text" name="nickname" required placeholder="예: 유리멘탈">
+          </label>
+          <label>직업 <em>*</em>
+            <input type="text" name="job" required placeholder="예: 나이트로드">
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>레벨 <em>*</em>
+            <input type="number" name="level" min="1" max="300" required placeholder="272">
+          </label>
+          <label>보스 배율 (%) <em>*</em>
+            <input type="number" name="multiplier" min="0" step="0.1" required placeholder="300">
+          </label>
+        </div>
+
+        <div class="form-row form-row-full">
+          <label>디스코드 주소 <em>*</em>
+            <input type="text" name="discord" required placeholder="예: discord.gg/xyz9876">
+          </label>
+        </div>
+
+        <div class="form-row form-row-full">
+          <label>참여 가능 시간 <em>*</em>
+            <input type="datetime-local" name="availableTime" required>
+          </label>
+        </div>
+
+        <div class="form-row form-row-full">
+          <label>구인자에게 하고 싶은 말
+            <textarea name="message" rows="3" placeholder="예: 베라 서버입니다 / 쿨뚝 유무 등 자유롭게 적어주세요"></textarea>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="apply-cancel-btn">취소</button>
+          <button type="submit" class="btn-primary">신청서 제출</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast-container"></div>
+
+<script type="module">
+  // ================= FIREBASE 초기화 =================
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, doc, updateDoc, deleteDoc,
+    query, where, orderBy, onSnapshot, serverTimestamp, arrayUnion,
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBP-Ia5c4BjxWOCaWmwxjyrmxa0qwweu64",
+    authDomain: "maplebossgo.firebaseapp.com",
+    projectId: "maplebossgo",
+    storageBucket: "maplebossgo.firebasestorage.app",
+    messagingSenderId: "1046376349927",
+    appId: "1:1046376349927:web:82715891d30e6358ca2242",
+    measurementId: "G-L3BP6L67JG",
+  };
+
+  const FIREBASE_READY = firebaseConfig.apiKey !== "YOUR_API_KEY";
+  const POSTS_COLLECTION = 'recruitPosts';
+
+  let db = null;
+  let auth = null;
+  let currentUser = null;
+
+  if(FIREBASE_READY){
+    try{
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+    }catch(err){
+      console.error('Firebase 초기화 실패:', err);
+    }
+  }
+
+  // ---------------- 구글 로그인 연동 ----------------
+  const provider = new GoogleAuthProvider();
+  const loginBtn = document.getElementById("login-btn");
+  const logoutBtn = document.getElementById("logout-btn");
+  const userInfo = document.getElementById("user-info");
+  const userName = document.getElementById("user-name");
+
+  if (auth) {
+    loginBtn.addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          showToast(`${result.user.displayName}님 로그인 성공!`, 'success');
+        })
+        .catch((error) => {
+          showToast('로그인 실패: ' + error.message, 'error');
+        });
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        showToast('로그아웃 되었습니다.');
+      });
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        loginBtn.style.display = "none";
+        userInfo.style.display = "inline-block";
+        userName.innerText = user.displayName;
+      } else {
+        currentUser = null;
+        loginBtn.style.display = "inline-block";
+        userInfo.style.display = "none";
+      }
+      if (currentBoss && currentDiff) {
+        openBoard(currentBoss, currentDiff);
+      }
+    });
+  }
+
+  // ---------------- 보스 데이터 ----------------
+  const TIERS = {
+    below: { label:'검밑솔', color:'var(--tier-below)' },
+    above: { label:'검윗솔', color:'var(--tier-above)' },
+  };
+
+  const DIFF_COLORS = {
+    '이지':'#5ee38a', '노멀':'#4fc3f7', '하드':'#ff9f43', '카오스':'#b47cff', '익스트림':'#ff3b5c'
+  };
+
+  const bosses = [
+    { name:'가디언 엔젤 슬라임', tier:'below',  glyph:'가', desc:'대천사의 힘을 빌린 최초의 슬라임 보스.', diffs:['카오스'] },
+    { name:'스우',              tier:'below',  glyph:'스', desc:'라비린스의 지배자, 어둠의 지휘관.', diffs:['하드','익스트림'] },
+    { name:'데미안',            tier:'below',  glyph:'데', desc:'검은 그림자를 두른 이형의 존재.', diffs:['하드'] },
+    { name:'루시드',            tier:'below',  glyph:'루', desc:'꿈과 악몽을 다스리는 서큐버스.', diffs:['하드'] },
+    { name:'윌',                tier:'below',  glyph:'윌', desc:'세계수를 갉아먹는 재앙의 손.', diffs:['하드'] },
+    { name:'더스크',            tier:'below',  glyph:'더', desc:'빛과 어둠, 두 얼굴을 가진 쌍둥이.', diffs:['카오스'] },
+    { name:'듄켈',              tier:'below',  glyph:'듄', desc:'검은 마법사의 파편에서 태어난 존재.', diffs:['하드'] },
+    { name:'진 힐라',            tier:'below',  glyph:'힐', desc:'제네시스의 힘을 얻어 각성한 힐라.', diffs:['하드'] },
+    { name:'림보',              tier:'above',  glyph:'림', desc:'경계에 선 자, 시공을 뒤트는 심판자.', diffs:['노멀','하드'] },
+    { name:'발드릭스',           tier:'above',  glyph:'발', desc:'용의 피를 이어받은 광기의 기사.', diffs:['노멀','하드'] },
+    { name:'카링',              tier:'above',  glyph:'카', desc:'감시자의 힘을 흡수한 폭주 마법사.', diffs:['이지','노멀','하드','익스트림'] },
+    { name:'유피테르',           tier:'above',  glyph:'유', desc:'별의 신전을 수호하는 천공의 존재.', diffs:['노멀','하드'] },
+    { name:'찬란한 흉성',        tier:'above',  glyph:'찬', desc:'재앙의 별이 응축된 신규 최상급 보스.', diffs:['노멀','하드'] },
+    { name:'세렌',              tier:'above',  glyph:'세', desc:'시간을 지배하는 정화의 마법사.', diffs:['노멀','하드','익스트림'] },
+    { name:'칼로스',            tier:'above',  glyph:'칼', desc:'대적자의 뒤를 잇는 어둠의 후예.', diffs:['이지','노멀','카오스','익스트림'] },
+    { name:'최초의 대적자',      tier:'above',  glyph:'최', desc:'검은 마법사에 맞선 최초의 전사.', diffs:['이지','노멀','하드','익스트림'] },
+    { name:'검은 마법사',        tier:'above',  glyph:'검', desc:'메이플 세계 최강, 모든 재앙의 근원.', diffs:['하드','익스트림'] },
+  ];
+
+  const grid = document.getElementById('boss-grid');
+  const statTotal = document.getElementById('stat-total');
+  statTotal.textContent = bosses.length;
+
+  function renderGrid(filter){
+    grid.innerHTML = '';
+    const list = filter === 'all' ? bosses : bosses.filter(b => b.tier === filter);
+    list.forEach((b, i) => {
+      const t = TIERS[b.tier];
+      const card = document.createElement('button');
+      card.className = 'boss-card';
+      card.style.setProperty('--tier-color', t.color);
+      card.style.animationDelay = (i * 0.03) + 's';
+      card.innerHTML = `
+        <div class="crest"><span class="crest-glyph">${b.glyph}</span></div>
+        <div class="boss-name">${b.name}</div>
+        <div class="boss-tier">${t.label}</div>
+        <div class="boss-meta"><span class="pulse"></span>구인 가능</div>
+      `;
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100) + '%');
+        card.style.setProperty('--my', ((e.clientY - r.top)/r.height*100) + '%');
+      });
+      card.addEventListener('click', () => openDifficulty(b));
+      grid.appendChild(card);
+    });
+  }
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      renderGrid(chip.dataset.filter);
+    });
+  });
+
+  renderGrid('all');
+
+  // ---------------- 화면 전환 ----------------
+  const homeScreen = document.getElementById('home-screen');
+  const diffScreen = document.getElementById('diff-screen');
+  const boardScreen = document.getElementById('board-screen');
+  const diffHeroContent = document.getElementById('diff-hero-content');
+  const diffOptions = document.getElementById('diff-options');
+  const boardHeroContent = document.getElementById('board-hero-content');
+  const partyList = document.getElementById('party-list');
+  const boardCount = document.getElementById('board-count');
+
+  const statusBanner = document.getElementById('firebase-status-banner');
+  if(FIREBASE_READY){
+    statusBanner.className = 'status-banner status-live';
+    statusBanner.innerHTML = '🟢 실시간 서버(Firestore)에 연결되어 있어요. 작성한 글은 실제로 저장되거나 삭제돼요.';
+  }else{
+    statusBanner.className = 'status-banner status-demo';
+    statusBanner.innerHTML = '🟡 데모 모드예요 (Firebase 미설정).';
+  }
+
+  const sampleNicks = ['달빛조각사','메소요정','불꽃유저','초코송이','샌드맨','루나틱','섬광','메이플러버','노가다장인','유리멘탈'];
+  const sampleMessages = [
+    '스카니아 서버입니다. 쿨뚝 100% 유지중이고 디코 필수로 켜주세요!',
+    '베라 서버 / 쿨감 완비 / 시간 약속 잘 지키시는 분 환영합니다.',
+    '루나 서버, 쿨뚝 여부 상관없어요. 편하게 신청해주세요~',
+    '엘리시움 서버 / 쿨감 100% / 마이크 필수는 아니지만 채팅은 봐주세요.',
+    '리부트 서버입니다. 쿨뚝 유무 상관없고 예의만 지켜주세요!',
+    '',
+  ];
+
+  function goTo(screen){
+    [homeScreen, diffScreen, boardScreen].forEach(s => {
+      if(s === homeScreen){ s.classList.toggle('leaving', s !== screen); }
+      else{ s.classList.toggle('active', s === screen); }
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // ---- 1단계 → 2단계: 난이도 선택 화면 ----
+  function tierBadgeStyle(color){
+    return `color:${color}; background:color-mix(in srgb, ${color} 14%, transparent); border-color:color-mix(in srgb, ${color} 40%, transparent);`;
+  }
+
+  function openDifficulty(boss){
+    const t = TIERS[boss.tier];
+    diffHeroContent.style.setProperty('--tier-color', t.color);
+    diffHeroContent.innerHTML = `
+      <div class="crest"><span class="crest-glyph">${boss.glyph}</span></div>
+      <div class="board-title">
+        <div class="board-badges"><span class="boss-tier" style="${tierBadgeStyle(t.color)}">${t.label}</span></div>
+        <h2>${boss.name} 난이도 선택</h2>
+        <p>참여할 난이도를 선택하면 해당 구인 게시판으로 이동합니다.</p>
+      </div>
+    `;
+
+    diffOptions.innerHTML = '';
+    boss.diffs.forEach(diff => {
+      const color = DIFF_COLORS[diff] || t.color;
+      const btn = document.createElement('button');
+      btn.className = 'diff-option';
+      btn.style.setProperty('--diff-color', color);
+      btn.innerHTML = `
+        <div class="diff-option-badge">${diff[0]}</div>
+        <div class="diff-option-name">${diff}</div>
+        <div class="diff-option-sub">${boss.name} · ${diff} 구인 글 보기</div>
+      `;
+      btn.addEventListener('click', () => openBoard(boss, diff));
+      diffOptions.appendChild(btn);
+    });
+
+    goTo(diffScreen);
+    diffScreen.dataset.bossIndex = bosses.indexOf(boss);
+  }
+
+  // ---- 2단계 → 3단계: 구인 게시판 화면 ----
+  const sampleJobs = ['아크메이지(불,독)','아크메이지(썬,콜)','비숍','보우마스터','신궁','나이트로드','섀도어','듀얼블레이더','바이퍼','캐논슈터','소울마스터','플레임위자드','나이트워커','스트라이커','루미너스','팬텀','은월','호영','아델','제로','키네시스','히어로','다크나이트','팔라딘'];
+
+  const CAP3_BOSSES = ['림보','발드릭스','찬란한 흉성','최초의 대적자','유피테르'];
+  function getMaxHeadcount(boss, diff){
+    if(boss.name === '스우' && diff === '익스트림') return 2;
+    if(CAP3_BOSSES.includes(boss.name)) return 3;
+    return 6;
+  }
+
+  let currentBoss = null;
+  let currentDiff = null;
+  let partyIdCounter = 0;
+  const partyApplications = {};
+
+  function mapleLink(nickname){
+    return `https://maple.gg/u/${encodeURIComponent(nickname)}`;
+  }
+
+  function renderPartyCard(data){
+    const id = data.id ?? (++partyIdCounter);
+    const source = data.source || 'demo';
+    if(source === 'demo' && !partyApplications[id]) partyApplications[id] = data.applications || [];
+    const apps = source === 'firestore' ? (data.applications || []) : (partyApplications[id] || []);
+
+    const isOwner = currentUser && currentUser.uid === data.ownerUid;
+
+    const card = document.createElement('div');
+    card.className = 'party-card' + (data.matched ? ' matched' : '');
+    card.dataset.id = id;
+    card.dataset.source = source;
+    card.dataset.webhook = data.webhookUrl || '';
+    card.style.setProperty('--tier-color', data.diffColor);
+    card.innerHTML = `
+      <div class="party-card-top">
+        <div class="party-card-title">
+          <b>[파티장 <a class="maple-link" href="${mapleLink(data.nickname)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${data.nickname}</a>] ${data.bossName} 같이 잡으실 분 구해요</b>
+          <span class="party-time">${data.timeLabel} ${data.webhookUrl ? '· <span class="webhook-badge">🔔 웹훅 알림 연결됨</span>' : ''}</span>
+        </div>
+        <div class="party-badges">
+          <span class="matched-badge">✅ 매칭 완료</span>
+          <span class="party-diff">${data.diff}</span>
+          <span class="party-period">${data.period}</span>
+        </div>
+      </div>
+      <div class="party-tags">
+        <span class="party-chip">${data.job}</span>
+        <span class="party-chip">모집 인원 ${data.cur} / ${data.headcount}인</span>
+      </div>
+      <div class="party-specs">
+        <div class="spec-line"><span class="spec-label">본인 스펙</span><span class="spec-value">Lv.${data.myLevel} · 배율 ${data.myMultiplier}%</span></div>
+        <hr class="spec-divider">
+        <div class="spec-line"><span class="spec-label">모집 조건</span><span class="spec-value">Lv.${data.condLevel}↑ · 배율 ${data.condMultiplier}%↑</span></div>
+      </div>
+      <div class="party-card-footer">
+        <span class="party-discord">💬 ${data.discord}</span>
+        <div class="party-card-actions">
+          ${isOwner ? `
+            <button class="match-btn" type="button">${data.matched ? '매칭 취소' : '매칭 완료'}</button>
+            <button class="delete-btn" type="button" style="background:none; border:1px solid var(--tier-above); color:var(--tier-above); font-weight:700; font-size:12.5px; padding:8px 14px; border-radius:8px; cursor:pointer;">글 삭제</button>
+          ` : `
+            <button class="match-btn" type="button" disabled style="opacity: 0.3; cursor: not-allowed;" title="작성자만 누를 수 있습니다.">매칭 완료</button>
+          `}
+          <button class="join-btn" type="button">참가 신청</button>
+        </div>
+      </div>
+      ${data.message ? `<div class="party-note">${data.message}</div>` : ''}
+      <div class="party-apps-toggle" type="button">
+        <span class="apps-count">신청 내역 <b>${apps.length}</b>건</span>
+        <span class="apps-arrow">보기 ▾</span>
+      </div>
+      <div class="party-apps-panel">${apps.length ? apps.map(renderAppComment).join('') : `<div class="app-empty">아직 신청 내역이 없습니다.</div>`}</div>
+    `;
+    return card;
+  }
+
+  function formatDateTimeLocal(value){
+    if(!value) return '';
+    const d = new Date(value);
+    if(isNaN(d.getTime())) return value;
+    return `${d.getMonth()+1}월 ${d.getDate()}일 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  }
+
+  function renderAppComment(app){
+    return `
+      <div class="app-comment">
+        <div class="app-comment-top">
+          <b><a class="maple-link" href="${mapleLink(app.nickname)}" target="_blank" rel="noopener">${app.nickname}</a></b>
+          <span class="app-comment-job">${app.job}</span>
+          <span class="app-comment-time">${app.timeLabel}</span>
+        </div>
+        <div class="app-comment-spec">Lv.${app.level} · 배율 ${app.multiplier}% · 💬 ${app.discord}</div>
+        <div class="app-comment-schedule">🗓 참여 가능 시간: ${formatDateTimeLocal(app.availableTime)}</div>
+        ${app.message ? `<div class="app-comment-message">${app.message}</div>` : ''}
+      </div>
+    `;
+  }
+
+  function updateAppsUI(card){
+    const id = card.dataset.id;
+    const apps = partyApplications[id] || [];
+    const countEl = card.querySelector('.apps-count b');
+    if(countEl) countEl.textContent = apps.length;
+    const panel = card.querySelector('.party-apps-panel');
+    if(panel){
+      panel.innerHTML = apps.length
+        ? apps.map(renderAppComment).join('')
+        : `<div class="app-empty">아직 신청 내역이 없습니다.</div>`;
+    }
+  }
+
+  let unsubscribePosts = null;
+  function stopWatchingPosts(){
+    if(unsubscribePosts){ unsubscribePosts(); unsubscribePosts = null; }
+  }
+
+  function formatRelativeTime(ts){
+    if(!ts || typeof ts.toDate !== 'function') return '방금 전';
+    const diffMs = Date.now() - ts.toDate().getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if(mins < 1) return '방금 전';
+    if(mins < 60) return `${mins}분 전`;
+    const hours = Math.floor(mins / 60);
+    if(hours < 24) return `${hours}시간 전`;
+    return `${Math.floor(hours / 24)}일 전`;
+  }
+
+  function renderDemoPosts(boss, diff, diffColor){
+    const count = 4 + (boss.name.length % 5);
+    boardCount.textContent = `${diff} 구인 글 ${count}개`;
+    partyList.innerHTML = '';
+    for(let i=0; i<count; i++){
+      const leader = sampleNicks[(i + boss.name.length) % sampleNicks.length];
+      const job = sampleJobs[(i * 3 + boss.glyph.charCodeAt(0)) % sampleJobs.length];
+      const max = getMaxHeadcount(boss, diff);
+      const cur = Math.min(1 + (i % 3), Math.max(1, max - 1));
+      const myLevel = 260 + ((i * 7 + boss.name.length) % 40);
+      const myMultiplier = (150 + ((i * 37 + boss.name.length * 5) % 450));
+      const condLevel = myLevel - (5 + (i % 3) * 5);
+      const condMultiplier = Math.max(100, myMultiplier - (50 + (i % 3) * 40));
+      const period = i % 2 === 0 ? '고정' : '용병';
+      const discord = `discord.gg/${boss.glyph}${(1000 + i * 37)}`;
+
+      partyList.appendChild(renderPartyCard({
+        source:'demo',
+        nickname:leader, bossName:boss.name, job, diff, diffColor, period,
+        myLevel, myMultiplier, condLevel, condMultiplier,
+        headcount:max, cur, discord,
+        ownerUid: 'demo-owner',
+        message: sampleMessages[(i + boss.name.length) % sampleMessages.length],
+        timeLabel:`${10 + i}분 전`,
+      }));
+    }
+  }
+
+  function watchFirestorePosts(boss, diff, diffColor){
+    partyList.innerHTML = `<div class="board-empty">구인 글을 불러오는 중...</div>`;
+    const q = query(
+      collection(db, POSTS_COLLECTION),
+      where('bossName', '==', boss.name),
+      where('diff', '==', diff),
+      orderBy('createdAt', 'desc'),
+    );
+    unsubscribePosts = onSnapshot(q, (snapshot) => {
+      boardCount.textContent = `${diff} 구인 글 ${snapshot.size}개`;
+
+      const openIds = new Set(
+        [...partyList.querySelectorAll('.party-card.apps-open')].map(el => el.dataset.id)
+      );
+
+      if(snapshot.empty){
+        partyList.innerHTML = `<div class="board-empty">아직 등록된 구인 글이 없어요.<br>가장 먼저 구인 글을 올려보세요!</div>`;
+        return;
+      }
+
+      partyList.innerHTML = '';
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const card = renderPartyCard({
+          id: docSnap.id,
+          source:'firestore',
+          nickname:data.nickname, bossName:data.bossName, job:data.job,
+          diff:data.diff, diffColor, period:data.period,
+          myLevel:data.myLevel, myMultiplier:data.myMultiplier,
+          condLevel:data.condLevel, condMultiplier:data.condMultiplier,
+          headcount:data.headcount, cur:data.cur || 1, discord:data.discord,
+          webhookUrl:data.webhookUrl, message:data.message,
+          applications:data.applications || [],
+          matched:data.status === '모집완료',
+          ownerUid: data.ownerUid,
+          timeLabel:formatRelativeTime(data.createdAt),
+        });
+        if(openIds.has(docSnap.id)) card.classList.add('apps-open');
+        partyList.appendChild(card);
+      });
+    }, (err) => {
+      console.error(err);
+      partyList.innerHTML = `<div class="board-empty">게시글을 불러오지 못했어요.<br>Firestore 보안 규칙 / 설정을 확인해주세요.</div>`;
+      showToast('게시글을 불러오지 못했어요: ' + err.message, 'error');
+    });
+  }
+
+  function openBoard(boss, diff){
+    const t = TIERS[boss.tier];
+    const diffColor = DIFF_COLORS[diff] || t.color;
+    currentBoss = boss;
+    currentDiff = diff;
+
+    boardHeroContent.style.setProperty('--tier-color', diffColor);
+    boardHeroContent.innerHTML = `
+      <div class="crest"><span class="crest-glyph">${boss.glyph}</span></div>
+      <div class="board-title">
+        <div class="board-badges">
+          <span class="boss-tier" style="${tierBadgeStyle(t.color)}">${t.label}</span>
+          <span class="boss-tier" style="${tierBadgeStyle(diffColor)}">${diff}</span>
+        </div>
+        <h2>${boss.name} 구인 게시판</h2>
+      </div>
+    `;
+
+    stopWatchingPosts();
+    if(FIREBASE_READY){
+      watchFirestorePosts(boss, diff, diffColor);
+    }else{
+      renderDemoPosts(boss, diff, diffColor);
+    }
+
+    boardScreen.dataset.bossIndex = bosses.indexOf(boss);
+    goTo(boardScreen);
+  }
+
+  document.getElementById('diff-back-btn').addEventListener('click', () => {
+    stopWatchingPosts();
+    goTo(homeScreen);
+  });
+
+  document.getElementById('back-btn').addEventListener('click', () => {
+    stopWatchingPosts();
+    const boss = bosses[boardScreen.dataset.bossIndex];
+    openDifficulty(boss);
+  });
+
+  // ---------------- 구인 글 작성 모달 ----------------
+  const writeModalOverlay = document.getElementById('write-modal-overlay');
+  const writeForm = document.getElementById('write-form');
+  const modalTargetBoss = document.getElementById('modal-target-boss');
+
+  function openWriteModal(){
+    if (!currentUser) {
+      showToast('구인 글을 쓰려면 로그인이 필요합니다.', 'error');
+      return;
+    }
+    if(!currentBoss) return;
+    const cap = getMaxHeadcount(currentBoss, currentDiff);
+    modalTargetBoss.textContent = `${currentBoss.name} · ${currentDiff} 난이도 구인 글`;
+    writeForm.reset();
+    const headcountInput = writeForm.querySelector('[name="headcount"]');
+    if(headcountInput){
+      headcountInput.max = cap;
+      headcountInput.placeholder = `최대 ${cap}인`;
+    }
+    writeModalOverlay.classList.add('active');
+  }
+
+  function closeWriteModal(){
+    writeModalOverlay.classList.remove('active');
+  }
+
+  document.getElementById('write-btn').addEventListener('click', openWriteModal);
+  document.getElementById('modal-close-btn').addEventListener('click', closeWriteModal);
+  document.getElementById('modal-cancel-btn').addEventListener('click', closeWriteModal);
+  writeModalOverlay.addEventListener('click', (e) => {
+    if(e.target === writeModalOverlay) closeWriteModal();
+  });
+
+  writeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if(!writeForm.checkValidity()){
+      writeForm.reportValidity();
+      return;
+    }
+
+    const fd = new FormData(writeForm);
+    const diffColor = DIFF_COLORS[currentDiff] || TIERS[currentBoss.tier].color;
+    const webhookUrl = fd.get('webhookUrl');
+
+    const postData = {
+      nickname: fd.get('nickname'),
+      bossName: currentBoss.name,
+      tier: currentBoss.tier,
+      job: fd.get('job'),
+      diff: currentDiff,
+      period: fd.get('period'),
+      myLevel: Number(fd.get('myLevel')),
+      myMultiplier: Number(fd.get('myMultiplier')),
+      condLevel: Number(fd.get('condLevel')),
+      condMultiplier: Number(fd.get('condMultiplier')),
+      headcount: Number(fd.get('headcount')),
+      cur: 1,
+      discord: fd.get('discord'),
+      webhookUrl: webhookUrl || '',
+      message: fd.get('message') || '',
+      ownerUid: currentUser ? currentUser.uid : 'demo-owner'
+    };
+
+    if(FIREBASE_READY){
+      try{
+        await addDoc(collection(db, POSTS_COLLECTION), {
+          ...postData,
+          status:'모집중',
+          applications:[],
+          createdAt: serverTimestamp(),
+        });
+        showToast('구인 글이 저장됐어요!', 'success');
+      }catch(err){
+        console.error(err);
+        showToast('구인 글 저장에 실패했어요: ' + err.message, 'error');
+        return;
+      }
+    }else{
+      const newCard = renderPartyCard({
+        source:'demo',
+        ...postData,
+        diffColor,
+        timeLabel:'방금 전',
+      });
+      partyList.prepend(newCard);
+      const num = parseInt(boardCount.textContent.match(/\d+/)?.[0] || '0', 10) + 1;
+      boardCount.textContent = `${currentDiff} 구인 글 ${num}개`;
+    }
+    closeWriteModal();
+  });
+
+  // ---------------- 토스트 알림 ----------------
+  const toastContainer = document.getElementById('toast-container');
+  function showToast(message, type = 'default'){
+    const toast = document.createElement('div');
+    toast.className = `toast${type === 'success' ? ' toast-success' : type === 'error' ? ' toast-error' : ''}`;
+    const icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : '🔔';
+    toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+    toastContainer.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('toast-leaving');
+      setTimeout(() => toast.remove(), 220);
+    }, 4200);
+  }
+
+  // ---------------- 디스코드 웹훅 ----------------
+  async function sendDiscordWebhook(url, embed){
+    if(!url) return;
+    try{
+      const res = await fetch(url, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ embeds:[embed] }),
+      });
+      if(res.ok || res.status === 204){
+        showToast('파티장 디스코드로 알림을 보냈어요.', 'success');
+      }
+    }catch(err){}
+  }
+
+  function buildApplicantEmbed(card, app){
+    const title = card.querySelector('.party-card-title b')?.textContent || '구인 글';
+    return {
+      title:'🙋 새로운 참가 신청이 도착했어요',
+      description:`**${title}**`,
+      color:0xff5a36,
+      fields:[
+        { name:'닉네임', value:`[${app.nickname}](${mapleLink(app.nickname)})`, inline:true },
+        { name:'직업', value:app.job || '-', inline:true },
+        { name:'레벨 · 배율', value:`Lv.${app.level} · ${app.multiplier}%`, inline:true },
+        { name:'참여 가능 시간', value:formatDateTimeLocal(app.availableTime) || '-', inline:true },
+        { name:'디스코드', value:app.discord || '-', inline:true },
+        ...(app.message ? [{ name:'하고 싶은 말', value:app.message }] : []),
+      ],
+    };
+  }
+
+  function buildMatchedEmbed(card){
+    const title = card.querySelector('.party-card-title b')?.textContent || '구인 글';
+    return {
+      title:'✅ 파티 매칭이 완료됐어요',
+      description:`**${title}**\n모집 인원이 모두 채워졌습니다.`,
+      color:0x5ee38a,
+    };
+  }
+
+  const applyModalOverlay = document.getElementById('apply-modal-overlay');
+  const applyForm = document.getElementById('apply-form');
+  const applyModalTarget = document.getElementById('apply-modal-target');
+  let applyTargetCard = null;
+
+  function openApplyModal(card){
+    if (!currentUser) {
+      showToast('참가 신청을 보내려면 로그인이 필요합니다.', 'error');
+      return;
+    }
+    applyTargetCard = card;
+    const title = card.querySelector('.party-card-title b')?.textContent || '구인 글';
+    applyModalTarget.textContent = title;
+    applyForm.reset();
+    applyModalOverlay.classList.add('active');
+  }
+
+  function closeApplyModal(){
+    applyModalOverlay.classList.remove('active');
+    applyTargetCard = null;
+  }
+
+  document.getElementById('apply-modal-close-btn').addEventListener('click', closeApplyModal);
+  document.getElementById('apply-cancel-btn').addEventListener('click', closeApplyModal);
+  applyModalOverlay.addEventListener('click', (e) => {
+    if(e.target === applyModalOverlay) closeApplyModal();
+  });
+
+  applyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if(!applyForm.checkValidity()){
+      applyForm.reportValidity();
+      return;
+    }
+    if(!applyTargetCard) return;
+
+    const fd = new FormData(applyForm);
+    const app = {
+      nickname: fd.get('nickname'),
+      job: fd.get('job'),
+      level: Number(fd.get('level')),
+      multiplier: Number(fd.get('multiplier')),
+      discord: fd.get('discord'),
+      availableTime: fd.get('availableTime'),
+      message: fd.get('message') || '',
+      timeLabel: '방금 전',
+    };
+
+    const id = applyTargetCard.dataset.id;
+    const webhookUrl = applyTargetCard.dataset.webhook;
+    const source = applyTargetCard.dataset.source;
+
+    if(source === 'firestore'){
+      try{
+        await updateDoc(doc(db, POSTS_COLLECTION, id), {
+          applications: arrayUnion(app),
+        });
+        applyTargetCard.classList.add('apps-open');
+        showToast('신청서를 제출했어요!', 'success');
+        if(webhookUrl){
+          sendDiscordWebhook(webhookUrl, buildApplicantEmbed(applyTargetCard, app));
+        }
+      }catch(err){
+        console.error(err);
+        showToast('신청 제출에 실패했어요: ' + err.message, 'error');
+        return;
+      }
+    }else{
+      partyApplications[id] = partyApplications[id] || [];
+      partyApplications[id].push(app);
+      updateAppsUI(applyTargetCard);
+      applyTargetCard.classList.add('apps-open');
+    }
+
+    closeApplyModal();
+  });
+
+  // 이벤트 위임
+  partyList.addEventListener('click', (e) => {
+    const card = e.target.closest('.party-card');
+    if(!card) return;
+
+    const joinBtn = e.target.closest('.join-btn');
+    if(joinBtn){
+      openApplyModal(card);
+      return;
+    }
+
+    const deleteBtn = e.target.closest('.delete-btn');
+    if(deleteBtn){
+      if(confirm('이 구인 글을 정말 삭제하시겠습니까?')){
+        const id = card.dataset.id;
+        const source = card.dataset.source;
+        if(source === 'firestore'){
+          deleteDoc(doc(db, POSTS_COLLECTION, id))
+            .then(() => showToast('구인 글이 삭제되었습니다.', 'success'))
+            .catch((err) => showToast('글 삭제 실패: ' + err.message, 'error'));
+        } else {
+          card.remove();
+          showToast('글이 삭제되었습니다.');
+        }
+      }
+      return;
+    }
+
+    const matchBtn = e.target.closest('.match-btn');
+    if(matchBtn){
+      const source = card.dataset.source;
+      const webhookUrl = card.dataset.webhook;
+      const willBeMatched = !card.classList.contains('matched');
+
+      if(source === 'firestore'){
+        const id = card.dataset.id;
+        matchBtn.disabled = true;
+        updateDoc(doc(db, POSTS_COLLECTION, id), {
+          status: willBeMatched ? '모집완료' : '모집중',
+        }).then(() => {
+          if(willBeMatched && webhookUrl){
+            sendDiscordWebhook(webhookUrl, buildMatchedEmbed(card));
+          }
+        }).catch((err) => {
+          console.error(err);
+        }).finally(() => {
+          matchBtn.disabled = false;
+        });
+      }else{
+        card.classList.toggle('matched');
+        if(willBeMatched){
+          matchBtn.textContent = '매칭 취소';
+        }else{
+          matchBtn.textContent = '매칭 완료';
+        }
+      }
+      return;
+    }
+
+    if(e.target.closest('.party-apps-panel')) return;
+    card.classList.toggle('apps-open');
+  });
+</script>
+</body>
+</html>
